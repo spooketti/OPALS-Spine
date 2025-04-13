@@ -21,6 +21,7 @@ public class ScaleToMarkerSize : MonoBehaviour
     /// Bounds of the mesh. Shouldn't change after start. 
     /// </summary>
     private Bounds rendStartBounds;
+    public bool isTag = true; //if it is not the tag, then it is the spine
 
     /// <summary>
     /// The scene's ZEDArUcoDetectionManager, for checking markerWidthMeters. Will be assigned automatically if left blank. 
@@ -68,7 +69,12 @@ public class ScaleToMarkerSize : MonoBehaviour
 
         float scalemult = markerSize / largest;
 
-        transform.localScale = new Vector3(scalemult, scalemult, scalemult/10);
+        if(isTag)
+        {
+            transform.localScale = new Vector3(scalemult, scalemult, scalemult/10);
+            return;
+        }
+        transform.transform.localScale = new Vector3(0.3f*scalemult,scalemult*0.3f,scalemult*0.3f);
     }
 }
 #endif

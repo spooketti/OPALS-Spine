@@ -7,6 +7,9 @@ public class CentroidManager : MonoBehaviour
     public GameObject spine;
     public Transform spineEulerTarget;
     private Vector3 spineCentroid = new Vector3(0, 0, 0);
+
+    public Dictionary<int, Transform> idTransformMap;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,9 +22,9 @@ public class CentroidManager : MonoBehaviour
         spineCentroid = new Vector3(0, 0, 0);
         spine.SetActive(true);
         int tagsDetected = 0;
-        foreach (GameObject child in gameObject.GetComponentsInChildren<GameObject>())
+        foreach (Transform child in transform)
         {
-            if(!child.activeInHierarchy)
+            if(!child.gameObject.activeInHierarchy)
             {
                 continue;
             }
@@ -37,9 +40,9 @@ public class CentroidManager : MonoBehaviour
             Debug.Log("no tags detected");
             return;
         }
-        spine.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+        // spine.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
         spine.transform.position = new Vector3(spineCentroid.x / tagsDetected, spineCentroid.y / tagsDetected, spineCentroid.z / tagsDetected);
         spine.transform.LookAt(spineEulerTarget);
-        spine.transform.eulerAngles = new Vector3(spine.transform.eulerAngles.x + 90, spine.transform.eulerAngles.y, spine.transform.eulerAngles.z);
+        spine.transform.eulerAngles = new Vector3(spine.transform.eulerAngles.x - 90, spine.transform.eulerAngles.y, spine.transform.eulerAngles.z);
     }
 }

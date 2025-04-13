@@ -27,7 +27,11 @@ public class ZEDArUcoDetectionManager : MonoBehaviour
     /// </summary>
     [Tooltip("Physical width of the printed ArUco markers.\r\n" +
         "Used to find the proper world position of the markers, so make sure this is accurate.")]
-    public float markerWidthMeters = 0.2f;
+    public float markerWidthMeters = 0.01f;
+
+    public int numberOfDetectedTags = 0;
+    public int oneTagDetectedId = -1; //this should become -1 if no tags are seen;
+    public List<int> CalibrationIDList = new List<int>();
 
     /// <summary>
     /// Pre-defined OpenCV dictionary of marker images used to identify markers in the scene. 
@@ -139,6 +143,13 @@ public class ZEDArUcoDetectionManager : MonoBehaviour
             int id = (int)ids.get(i, 0)[0];
             if (!detectedIDs.Contains(id)) detectedIDs.Add(id);
         }
+        CalibrationIDList = detectedIDs;
+        numberOfDetectedTags = detectedIDs.Count;
+        oneTagDetectedId = -1;
+        if(numberOfDetectedTags == 1)
+        {
+            oneTagDetectedId = detectedIDs[0];
+        }
 
         //We'll go through every ID that's been registered into registered Markers, and see if we found any markers in the scene with that ID. 
         Dictionary<int, List<sl.Pose>> detectedWorldPoses = new Dictionary<int, List<sl.Pose>>(); //Key is marker ID, value is world space poses.
@@ -150,6 +161,7 @@ public class ZEDArUcoDetectionManager : MonoBehaviour
 
             if (detectedIDs.Contains(id)) //At least one MarkerObject needs to be updated. Convert pose to world space and call MarkerDetected() on it. 
             {
+                // Debug.Log(id);
                 //Translation is just pose relative to camera. But we need to flip Y because of OpenCV's different coordinate system. 
                 Vector3 localpos;
                 localpos.x = (float)transvectors.get(index, 0)[0];
