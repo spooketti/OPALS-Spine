@@ -19,12 +19,10 @@ public abstract class MarkerObject : MonoBehaviour
     [Tooltip("ID of the marker that will trigger the MarkerDetected function to be called.\r\n" +
         "ID corresponds to an ID in the OpenCV dictionary. ")]
     public int markerID = 0;
-    private int lastKnownMarkerID = 0;
 
     // Use this for initialization
     protected virtual void Start()
     {
-        lastKnownMarkerID = markerID;
         ZEDArUcoDetectionManager.RegisterMarker(this); //Tells ZEDArUcoDetectionManager to tell us when our marker is detected. 
     }
 

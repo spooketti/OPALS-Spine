@@ -15,6 +15,9 @@ public class Calibration : MonoBehaviour
     private bool isAngleCalibrated = false;
     private bool isSystemCalibrated = false;
     private bool isEulerTagSeen = false;
+    private int eulerID = 0;
+
+    private List<int> seenID = new List<int>();
 
     //UI
     public GameObject eulerPanel;
@@ -23,12 +26,13 @@ public class Calibration : MonoBehaviour
 
     public Transform spineEulerTarget;
     private long epochTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-
     private GameObject CreateMarkerObject(string name, int id)
     {
         GameObject marker = new GameObject(name);
+        marker.SetActive(false);
         var moveScript = marker.AddComponent<MarkerObject_MoveToMarkerSimple>();
         moveScript.markerID = id;
+        marker.SetActive(true);
         marker.AddComponent<ScaleToMarkerSize>();
         marker.GetComponent<ScaleToMarkerSize>().arucoManager = detectionManager;
         return marker;
@@ -76,6 +80,7 @@ public class Calibration : MonoBehaviour
                 isAngleCalibrated = true;
                 systemPanel.SetActive(true);
                 eulerPanel.SetActive(false);
+                eulerID = detectionManager.oneTagDetectedId;
             }
             return;
         }
@@ -85,16 +90,19 @@ public class Calibration : MonoBehaviour
             
             if (lastPositionListSize != detectionManager.CalibrationIDList.Count)
             {
-                foreach (Transform child in centroid.transform)
-                {
-                    Destroy(child.gameObject);
-                }
+                // foreach (Transform child in centroid.transform)
+                // {
+                //     Destroy(child.gameObject);
+                // }
                 lastPositionListSize = detectionManager.CalibrationIDList.Count;
 
                 foreach (int id in detectionManager.CalibrationIDList)
                 {
-                    GameObject tag = CreateMarkerObject($"tag{id}", id);
-                    tag.transform.SetParent(centroid.transform);
+                    if(!GameObject.Find($"tag{id}"))
+                    {
+                        GameObject tag = CreateMarkerObject($"tag{id}", id);
+                        tag.transform.SetParent(centroid.transform);
+                    }
                 }
             }
             isSystemCalibrated = Input.GetKeyDown(KeyCode.Return);

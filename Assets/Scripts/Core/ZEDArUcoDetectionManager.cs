@@ -119,6 +119,8 @@ public class ZEDArUcoDetectionManager : MonoBehaviour
         }
     }
 
+    
+
 
     void Start()
     {
