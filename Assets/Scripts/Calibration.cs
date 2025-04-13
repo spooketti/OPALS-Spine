@@ -37,7 +37,7 @@ public class Calibration : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        centroid.gameObject.SetActive(isCalibrated);
+        // centroid.gameObject.SetActive(isCalibrated);
         if(isCalibrated)
         {
             return;
@@ -62,6 +62,8 @@ public class Calibration : MonoBehaviour
                         eulerStatus.text = $"Tag Detected: {detectionManager.oneTagDetectedId}";
                         isEulerTagSeen = true;
                         spineEulerTarget.GetComponent<MarkerObject_MoveToMarkerSimple>().markerID = detectionManager.oneTagDetectedId;
+                        detectionManager.GetComponent<ZEDArUcoDetectionManager>().UnregisterAllMarkers();
+                        detectionManager.GetComponent<ZEDArUcoDetectionManager>().DynamicRegisterMarker(spineEulerTarget.GetComponent<MarkerObject_MoveToMarkerSimple>());
                         break;
 
                     default:
@@ -77,8 +79,10 @@ public class Calibration : MonoBehaviour
             }
             return;
         }
+        centroid.GetComponent<CentroidManager>().enabled = true;
         if (!isSystemCalibrated)
         {
+            
             if (lastPositionListSize != detectionManager.CalibrationIDList.Count)
             {
                 foreach (Transform child in centroid.transform)
@@ -98,7 +102,6 @@ public class Calibration : MonoBehaviour
         }
         isCalibrated = true;
         systemPanel.SetActive(false);
-        
 
     }
 }

@@ -22,6 +22,7 @@ public class MarkerObject_MoveToMarkerSimple : MarkerObject
 
     public override void MarkerNotDetected()
     {
+        // Debug.Log(markerID);
         gameObject.SetActive(false);
     }
 }

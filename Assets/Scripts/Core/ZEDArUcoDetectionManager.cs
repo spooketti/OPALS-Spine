@@ -77,6 +77,30 @@ public class ZEDArUcoDetectionManager : MonoBehaviour
         }
     }
 
+    public void DynamicRegisterMarker(MarkerObject marker)
+    {
+        if (!registeredMarkers.ContainsKey(marker.markerID))
+        {
+            registeredMarkers.Add(marker.markerID, new List<MarkerObject>());
+        }
+
+        List<MarkerObject> idlist = registeredMarkers[marker.markerID];
+
+        if (!idlist.Contains(marker))
+        {
+            idlist.Add(marker);
+        }
+        else
+        {
+            Debug.LogError("Tried to register " + marker.gameObject.name + " as a new marker, but it was already registered.");
+        }
+    }
+
+    public void UnregisterAllMarkers()
+    {
+       registeredMarkers.Clear();
+    }
+
 
     /// <summary>
     /// Removes a MarkerObject from the registeredMarkers dictionary. Called when a MarkerObject is destroyed. 
@@ -218,6 +242,7 @@ public class ZEDArUcoDetectionManager : MonoBehaviour
         if (OnMarkersDetected != null) OnMarkersDetected.Invoke(detectedWorldPoses);
 
         //foreach (int detectedid in detectedWorldPoses.Keys)
+        // Debug.Log(registeredMarkers.Count);
         foreach (int key in registeredMarkers.Keys)
         {
             if (detectedWorldPoses.ContainsKey(key))
