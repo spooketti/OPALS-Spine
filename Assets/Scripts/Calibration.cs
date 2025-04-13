@@ -1,129 +1,3 @@
-// using System.Collections;
-// using System.Collections.Generic;
-// using UnityEngine;
-// using UnityEngine.UI;
-// using UnityEngine.UIElements;
-// using TMPro;
-// using System;
-// using Image = UnityEngine.UI.Image;
-
-// public class Calibration : MonoBehaviour
-// {
-//     public ZEDArUcoDetectionManager detectionManager;
-//     public GameObject centroid;
-//     public GameObject tagPrefab;
-//     private int lastPositionListSize = 0;
-//     private bool isCalibrated = false;
-//     private bool isAngleCalibrated = false;
-//     private bool isSystemCalibrated = false;
-//     private bool isEulerTagSeen = false;
-//     private int eulerID = 0;
-//     public Image radialProgresImage;
-
-//     private List<int> seenID = new List<int>();
-
-//     //UI
-//     public GameObject eulerPanel;
-//     public TMP_Text eulerStatus;
-//     public GameObject systemPanel;
-
-//     public Transform spineEulerTarget;
-//     private long epochTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-//     private GameObject CreateMarkerObject(string name, int id)
-//     {
-//         GameObject marker = Instantiate(tagPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-//         marker.name = name;
-//         marker.SetActive(false);
-//         var moveScript = marker.GetComponent<MarkerObject_MoveToMarkerSimple>();
-//         moveScript.markerID = id;
-//         marker.SetActive(true);
-//         marker.GetComponent<ScaleToMarkerSize>().arucoManager = detectionManager;
-//         return marker;
-//     }
-
-//     // Update is called once per frame
-//     void Update()
-//     {
-//         // centroid.gameObject.SetActive(isCalibrated);
-//         if (isCalibrated)
-//         {
-//             Debug.Log("bro");
-//             return;
-//         }
-//         if (!isAngleCalibrated)
-//         {
-//             eulerPanel.SetActive(true);
-
-//             if (lastPositionListSize != detectionManager.CalibrationIDList.Count) //on number of tags seen changed
-//             {
-//                 isEulerTagSeen = false;
-//                 lastPositionListSize = detectionManager.CalibrationIDList.Count;
-//                 int detectedTags = detectionManager.numberOfDetectedTags;
-//                 switch (detectedTags)
-//                 {
-//                     case 0:
-//                         eulerStatus.text = "No Tags Detected";
-//                         break;
-
-//                     case 1:
-//                         epochTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-//                         eulerStatus.text = $"Tag Detected: {detectionManager.oneTagDetectedId}";
-//                         isEulerTagSeen = true;
-//                         spineEulerTarget.GetComponent<MarkerObject_MoveToMarkerSimple>().markerID = detectionManager.oneTagDetectedId;
-//                         detectionManager.GetComponent<ZEDArUcoDetectionManager>().UnregisterAllMarkers();
-//                         detectionManager.GetComponent<ZEDArUcoDetectionManager>().DynamicRegisterMarker(spineEulerTarget.GetComponent<MarkerObject_MoveToMarkerSimple>());
-//                         break;
-
-//                     default:
-//                         eulerStatus.text = "Please have only one tag showing";
-//                         break;
-//                 }
-//             }
-//             long progress = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - epochTime;
-//             float radialProgress = Mathf.Clamp(progress / 5000f, 0f, 1f);
-//             radialProgresImage.fillAmount = radialProgress;
-//             if (progress >= 5000 && isEulerTagSeen)
-//             {
-//                 isAngleCalibrated = true;
-//                 systemPanel.SetActive(true);
-//                 eulerPanel.SetActive(false);
-//                 eulerID = detectionManager.oneTagDetectedId;
-//                 Debug.Log("euler completed");
-//             }
-//             return;
-//         }
-//         centroid.GetComponent<CentroidManager>().enabled = true;
-//         if (Input.GetKey(KeyCode.E))
-//         {
-//             Debug.Log("pressed e");
-//             isSystemCalibrated = true;
-//             systemPanel.SetActive(false);
-//         }
-//         if (!isSystemCalibrated)
-//         {
-
-//             if (lastPositionListSize != detectionManager.CalibrationIDList.Count)
-//             {
-//                 lastPositionListSize = detectionManager.CalibrationIDList.Count;
-
-//                 foreach (int id in detectionManager.CalibrationIDList)
-//                 {
-//                     if (!GameObject.Find($"tag{id}") && id != eulerID)
-//                     {
-//                         GameObject tag = CreateMarkerObject($"tag{id}", id);
-//                         tag.transform.SetParent(centroid.transform);
-//                     }
-//                 }
-//             }
-//             return;
-//         }
-//         isCalibrated = true;
-//         systemPanel.SetActive(false);
-
-//     }
-// }
-
-
 using UnityEngine;
 using TMPro;
 using Image = UnityEngine.UI.Image;
@@ -136,6 +10,7 @@ public class Calibration : MonoBehaviour
     public Image radialProgressImage;
 
     public GameObject eulerPanel;
+    public GameObject RadialObject;
     public TMP_Text eulerStatus;
     public GameObject systemPanel;
     public Transform spineEulerTarget;
@@ -249,7 +124,7 @@ public class Calibration : MonoBehaviour
         if (detectionManager.CalibrationIDList.Count > 1)
         {
             timer += Time.deltaTime;
-            radialProgressImage.fillAmount = Mathf.Clamp01(timer / 5f);
+            radialProgressImage.fillAmount = Mathf.Clamp01(timer / 10f);
             if (timer >= 10f)
             {
                 isSystemCalibrated = true;
@@ -263,6 +138,7 @@ public class Calibration : MonoBehaviour
     {
         isCalibrated = true;
         systemPanel.SetActive(false);
+        RadialObject.SetActive(false);
     }
 
     private GameObject CreateMarkerObject(string name, int id)

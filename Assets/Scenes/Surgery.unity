@@ -354,6 +354,7 @@ MonoBehaviour:
     type: 3}
   radialProgressImage: {fileID: 897078607}
   eulerPanel: {fileID: 2130098685}
+  RadialObject: {fileID: 0}
   eulerStatus: {fileID: 2126281208}
   systemPanel: {fileID: 1925042431}
   spineEulerTarget: {fileID: 1678711657}
@@ -414,7 +415,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Press [E] To Finalize
+  m_text: Show All Tags To Finish Calibration
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
