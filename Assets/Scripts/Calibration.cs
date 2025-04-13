@@ -146,7 +146,7 @@ public class Calibration : MonoBehaviour
     private bool isSystemCalibrated = false;
     private bool isEulerTagSeen = false;
     private int eulerID = 0;
-    private float eulerTimer = 0f;
+    private float timer = 0f;
 
     private void Update()
     {
@@ -179,7 +179,7 @@ public class Calibration : MonoBehaviour
         {
             lastPositionListSize = detectionManager.CalibrationIDList.Count;
             isEulerTagSeen = false;
-            eulerTimer = 0f;
+            timer = 0f;
 
             int detectedTags = detectionManager.numberOfDetectedTags;
 
@@ -209,10 +209,10 @@ public class Calibration : MonoBehaviour
 
         if (isEulerTagSeen)
         {
-            eulerTimer += Time.deltaTime;
-            radialProgressImage.fillAmount = Mathf.Clamp01(eulerTimer / 5f);
+            timer += Time.deltaTime;
+            radialProgressImage.fillAmount = Mathf.Clamp01(timer / 5f);
 
-            if (eulerTimer >= 5f)
+            if (timer >= 5f)
             {
                 isAngleCalibrated = true;
                 eulerID = detectionManager.oneTagDetectedId;
@@ -224,7 +224,7 @@ public class Calibration : MonoBehaviour
             }
             return;
         }
-        eulerTimer = 0f;
+        timer = 0f;
         radialProgressImage.fillAmount = 0f;
     }
 
@@ -233,16 +233,9 @@ public class Calibration : MonoBehaviour
     {
         centroid.GetComponent<CentroidManager>().enabled = true;
 
-        if (Input.GetKey(KeyCode.E))
-        {
-            Debug.Log("Pressed E");
-            isSystemCalibrated = true;
-            systemPanel.SetActive(false);
-            return;
-        }
-
         if (lastPositionListSize != detectionManager.CalibrationIDList.Count)
         {
+            timer = 0f;
             lastPositionListSize = detectionManager.CalibrationIDList.Count;
 
             foreach (int id in detectionManager.CalibrationIDList)
@@ -251,6 +244,17 @@ public class Calibration : MonoBehaviour
 
                 GameObject tag = CreateMarkerObject($"tag{id}", id);
                 tag.transform.SetParent(centroid.transform);
+            }
+        }
+        if (detectionManager.CalibrationIDList.Count > 1)
+        {
+            timer += Time.deltaTime;
+            radialProgressImage.fillAmount = Mathf.Clamp01(timer / 5f);
+            if (timer >= 10f)
+            {
+                isSystemCalibrated = true;
+                systemPanel.SetActive(false);
+                return;
             }
         }
     }
