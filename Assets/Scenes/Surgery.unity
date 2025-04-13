@@ -354,7 +354,7 @@ MonoBehaviour:
     type: 3}
   radialProgressImage: {fileID: 897078607}
   eulerPanel: {fileID: 2130098685}
-  RadialObject: {fileID: 0}
+  RadialObject: {fileID: 897078605}
   eulerStatus: {fileID: 2126281208}
   systemPanel: {fileID: 1925042431}
   spineEulerTarget: {fileID: 1678711657}

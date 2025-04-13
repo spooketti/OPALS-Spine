@@ -27,7 +27,7 @@ public class Calibration : MonoBehaviour
     {
         if (isCalibrated)
         {
-            Debug.Log("bro");
+            RadialObject.SetActive(false);
             return;
         }
 
@@ -124,11 +124,18 @@ public class Calibration : MonoBehaviour
         if (detectionManager.CalibrationIDList.Count > 1)
         {
             timer += Time.deltaTime;
-            radialProgressImage.fillAmount = Mathf.Clamp01(timer / 10f);
-            if (timer >= 10f)
+            radialProgressImage.fillAmount = Mathf.Clamp01(timer / 7f);
+            if (timer >= 7f)
             {
                 isSystemCalibrated = true;
                 systemPanel.SetActive(false);
+                foreach (Transform child in centroid.transform)
+                {
+                    if(!child.gameObject.activeInHierarchy)
+                    {
+                        Destroy(child.gameObject);
+                    }
+                }
                 return;
             }
         }
