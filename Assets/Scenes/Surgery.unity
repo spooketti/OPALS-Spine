@@ -358,6 +358,7 @@ MonoBehaviour:
   eulerStatus: {fileID: 2126281208}
   systemPanel: {fileID: 1925042431}
   spineEulerTarget: {fileID: 1678711657}
+  isCalibrated: 0
 --- !u!1 &546891476
 GameObject:
   m_ObjectHideFlags: 0
@@ -533,13 +534,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 569099478}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9ca604725e8bf0545926750a5edc0779, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   spine: {fileID: 7058491172919520721}
   spineEulerTarget: {fileID: 1678711657}
+  calibration: {fileID: 349925332}
 --- !u!1 &767790675
 GameObject:
   m_ObjectHideFlags: 0
@@ -1640,6 +1642,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7674537312844171984}
+  - component: {fileID: 7674537312844171985}
   m_Layer: 0
   m_Name: Spine
   m_TagString: Untagged
@@ -1655,14 +1658,29 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7058491172919520721}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.000000037748954, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.000010252, y: -0.060787, z: 0.044213}
+  m_LocalRotation: {x: 0.7047993, y: 0.05707822, z: -0.05707822, w: 0.7047993}
+  m_LocalPosition: {x: -10, y: -10, z: -10}
   m_LocalScale: {x: 0.038128, y: 0.038128, z: 0.038128}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5274754099167221340}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: -12.02, z: -21.28}
+--- !u!114 &7674537312844171985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7058491172919520721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84c951c30a5de044b99b5edab61e5d11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  filter: {fileID: 0}
+  isTag: 0
+  arucoManager: {fileID: 184037563}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using Image = UnityEngine.UI.Image;
+using System.Collections.Generic;
 
 public class Calibration : MonoBehaviour
 {
@@ -16,12 +17,19 @@ public class Calibration : MonoBehaviour
     public Transform spineEulerTarget;
 
     private int lastPositionListSize = 0;
-    private bool isCalibrated = false;
+    public bool isCalibrated = false;
     private bool isAngleCalibrated = false;
     private bool isSystemCalibrated = false;
     private bool isEulerTagSeen = false;
     private int eulerID = 0;
     private float timer = 0f;
+    private GameObject spine;
+    public Dictionary<int, Transform> tagOrigins = new Dictionary<int, Transform>();
+
+    private void Start()
+    {
+        spine = GameObject.Find("Spine");
+    }
 
     private void Update()
     {
@@ -48,6 +56,7 @@ public class Calibration : MonoBehaviour
 
     private void HandleEulerCalibration()
     {
+        spine.SetActive(false);
         eulerPanel.SetActive(true);
 
         if (lastPositionListSize != detectionManager.CalibrationIDList.Count)
@@ -85,12 +94,15 @@ public class Calibration : MonoBehaviour
         if (isEulerTagSeen)
         {
             timer += Time.deltaTime;
+            radialProgressImage.color = Color.Lerp(Color.white, Color.green, Mathf.Clamp01(timer / 5f));
             radialProgressImage.fillAmount = Mathf.Clamp01(timer / 5f);
 
             if (timer >= 5f)
             {
                 isAngleCalibrated = true;
                 eulerID = detectionManager.oneTagDetectedId;
+                timer = 0f;
+                radialProgressImage.fillAmount = 0f;
 
                 eulerPanel.SetActive(false);
                 systemPanel.SetActive(true);
@@ -106,6 +118,7 @@ public class Calibration : MonoBehaviour
 
     private void HandleSystemCalibration()
     {
+        spine.SetActive(true);
         centroid.GetComponent<CentroidManager>().enabled = true;
 
         if (lastPositionListSize != detectionManager.CalibrationIDList.Count)
@@ -124,6 +137,7 @@ public class Calibration : MonoBehaviour
         if (detectionManager.CalibrationIDList.Count > 1)
         {
             timer += Time.deltaTime;
+            radialProgressImage.color = Color.Lerp(Color.white, Color.green, Mathf.Clamp01(timer / 7f));
             radialProgressImage.fillAmount = Mathf.Clamp01(timer / 7f);
             if (timer >= 7f)
             {
@@ -131,10 +145,12 @@ public class Calibration : MonoBehaviour
                 systemPanel.SetActive(false);
                 foreach (Transform child in centroid.transform)
                 {
-                    if(!child.gameObject.activeInHierarchy)
+                    if (!child.gameObject.activeInHierarchy)
                     {
                         Destroy(child.gameObject);
+                        continue;
                     }
+                    tagOrigins.Add(child.GetComponent<MarkerObject_MoveToMarkerSimple>().markerID, child);
                 }
                 return;
             }

@@ -74,7 +74,7 @@ public class ScaleToMarkerSize : MonoBehaviour
             transform.localScale = new Vector3(scalemult, scalemult, scalemult/10);
             return;
         }
-        transform.transform.localScale = new Vector3(scalemult,scalemult,scalemult);
+        transform.transform.localScale = new Vector3(2*scalemult,2*scalemult,2*scalemult);
     }
 }
 #endif
